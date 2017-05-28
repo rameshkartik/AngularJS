@@ -1,0 +1,40 @@
+﻿
+<script src="Scripts/angular.js"></script>
+<script src="Scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
+<script>
+
+    function Employee($scope)
+    {
+        $scope.EmployeeName = "Ravi";
+    }
+
+    var myApp = angular.module("myApp", []);
+    myApp.controller("Employee", Employee);
+
+    function SetVal() {
+        //$("#txt1").val("Changed by Jquery");
+
+        var txtRef = $("#txt1");
+        var scope = angular.element(txtRef).scope();
+        scope.EmployeeName = "Rameshkartik";
+        scope.$apply();
+    }
+    
+</script>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+
+<body ng-app="myApp" >
+    <div ng-controller="Employee">
+        <input  id="txt1" type="text" value="" name="txt" ng-model="EmployeeName"><br />
+        {{EmployeeName}}
+        <input type="button" value="click" name="btn" onclick="SetVal()" />
+    </div>
+
+</body>
+</html>

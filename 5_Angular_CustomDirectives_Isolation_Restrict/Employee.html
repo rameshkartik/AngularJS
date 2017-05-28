@@ -1,0 +1,171 @@
+﻿
+<script src="Scripts/angular.js"></script>
+<script src="Scripts/Project%20Scripts/Employee.js"></script>
+<script src="Scripts/Project%20Scripts/Utility.js"></script>
+<script>
+    function CopyRight() {
+
+        var directive = {};
+        directive.restrict = "E";
+        directive.template = "@Copyright 2016-2017  {{Employee.EmployeeName}} ";
+        return directive;
+    }
+
+    function UserCtrl() {
+
+        var directive = {};
+        directive.scope = {
+            previewData: "@",
+            editFld1: "=",
+            anyMethod: "&"
+        };
+        
+        directive.templateUrl = "UserCtrl.html";
+        return directive;
+    }
+
+    var defer = null;
+    function initPromises() {
+
+        defer = $q.defer();
+        var promise = defer.promise;
+        promise.then(setEmployees, Failure1, Notify1);
+        promise.then(clearEmployees, Failure2, Notify2);
+    }
+    function BindingObj($scope,Factory,UtilityObject,$http,$q)
+    {
+
+        function setEmployees(data) {
+            $scope.Employees = data;
+        }
+
+        function clearEmployees(data) {
+            $scope.Employee = {};
+        }
+
+        function Failure1() {
+            alert("Failure1");
+        }
+
+        function Failure2() {
+            alert("Failure2");
+        }
+
+        function Notify1() {
+            alert("Notify1");
+        }
+
+        function Notify2() {
+            alert("Notify2");
+        }
+
+
+        var defer = $q.defer();
+        var promise = defer.promise;
+        promise.then(setEmployees, Failure1,Notify1);
+        promise.then(clearEmployees, Failure2,Notify2);
+        
+              
+        $scope.Employee = Factory.CreateEmployee(2, UtilityObject);
+        $scope.Employees = [];
+        $scope.Utility = UtilityObject;
+        $scope.EmployeeSalaryColor = "Red";
+        $scope.$watch("Employee.EmployeeSalary", function ()
+        {
+            if ($scope.Employee.EmployeeSalary > 3000)
+            {
+                $scope.EmployeeSalaryColor = "Green";
+            }
+            else
+            {
+                $scope.EmployeeSalaryColor = "Red";
+            }
+        });
+
+        $scope.Submit = function () {
+            if ($scope.Utility.isEmpty($scope.Employee.EmployeeSalary))
+            {
+                alert("Need a Proper Data");
+            }
+            else
+            {
+            
+                $http.post('http://localhost:14894/api/Employee', $scope.Employee).then(function (resp) {
+
+                    //$scope.Employees = resp.data;
+                    //$scope.Employee = {};
+                    defer.resolve(resp.data);
+                    
+
+                }).catch(function (err1) {
+
+                    //defer.reject();
+                    defer.notify();
+                });
+            }
+
+        }
+    }
+
+    
+
+
+    var myApp = angular.module("myApp", []);
+    myApp.controller("BindingObj", BindingObj);
+    myApp.factory("Factory", Factory);
+    myApp.service("UtilityObject", Utility);
+    myApp.directive("companyCopyRight", CopyRight);
+    myApp.directive("userControl", UserCtrl);
+</script>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+
+<body >
+    <div ng-app="myApp">
+        
+        <div id="EmployeeScreen" ng-controller="BindingObj">
+            Welcome to application :- {{::Utility.ApplicationName}} <br />
+            Application Version :- {{::Utility.AppVersion}} <br />
+            Date and Time of Sales :- {{Employee.SalesDateTime}} <br /> <br /> <br />
+            Employee Name :- <input id="EmployeeName" type="text" ng-model="Employee.EmployeeName" /><br />
+            Employee Code :- <input id="EmployeeCode" type="text" ng-model="Employee.EmployeeCode" /><br />
+            EmployeeSalary:- <input style="background-color:{{EmployeeSalaryColor}}" id="EmployeeSalary" type="text" ng-model="Employee.EmployeeSalary" /><br />
+            <input type="button" name="btn" value="Submit" ng-click="Submit()" />
+            <input type="button" name="btn" value="Calcuate Discount" ng-click="Employee.CalculateDiscount()" /><br> <br />
+            <div id="divEmployeeName">{{Employee.EmployeeName}}</div>
+            <div id="divEmployeeCode">{{Employee.EmployeeCode}}</div>
+            <div id="divEmployeeSal">{{Employee.EmployeeSalary}}</div>
+            <company-copy-right></company-copy-right>
+                <table>
+                    <tr>
+                        <td>EmployeeName</td>
+                        <td>EmployeeCode</td>
+                        <td>EmployeeSalary</td>
+                        <td>SalesDateTime</td>
+                    </tr>
+
+                    <tr ng-repeat="emp in Employees">
+                        <td>{{::emp.EmployeeName}}</td>
+                        <td>{{::emp.EmployeeCode}}</td>
+                        <td>{{::emp.EmployeeSalary}}</td>
+                        <td>{{::emp.SalesDateTime}}</td>
+                    </tr>
+                </table>
+
+            <user-control any-method="Employee.CalculateDiscount()"
+                          edit-fld1=" Employee.EmployeeName"
+                          preview-data="{{Employee.EmployeeName}} &#13;&#10 {{Employee.EmployeeCode}} &#13;&#10  {{Employee.EmployeeSalary}} &#13;&#10 {{Employee.SalesDateTime}} &#13;&#10">
+
+            </user-control>
+
+</div> <br /> <br />
+        
+    </div>
+
+</body>
+</html>

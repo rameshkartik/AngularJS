@@ -1,0 +1,58 @@
+﻿
+<script src="Scripts/angular.js"></script>
+<script>
+    var myApp = angular.module("myApp", []);
+
+    myApp.filter("toText", function () {
+        return function (value) {
+            if (value == 1) {
+                return "One";
+            }
+            else if (value == 2) {
+                return "Two";
+            }
+            else {
+                return "Unknown";
+            }
+
+
+        }
+    })
+    myApp.controller("EmployeeCtrller", function ($scope) {
+     
+        $scope.Employees = [
+           { EmployeeName: "Ramesh", Salary: 2000 },
+           { EmployeeName: "Rakesh", Salary: 3000 },
+           { EmployeeName: "Ranjit", Salary: 4000 },
+        ];
+
+        $scope.NumberOfRecords = 3;
+    });
+</script>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+
+<body ng-app="myApp" >
+    <div ng-controller="EmployeeCtrller">
+        <!--<span>{{EmployeeName | uppercase}}</span> <br />
+        <span>{{Salary | currency}}</span>-->
+        <input name="txt" type="text" ng-model="Search.EmployeeName" />
+        <ul>
+            <!--<li ng-repeat="item in Employees | limitTo:NumberOfRecords |orderBy:'EmployeeName'">-->
+            <li ng-repeat="item in Employees | filter:Search">
+                {{item.EmployeeName}}({{item.Salary}})
+            </li>
+        </ul>
+
+        <input name="txt1" type="text" ng-model="Input" />
+        <span>{{Input | toText}}</span>
+
+    </div>
+
+</body>
+</html>

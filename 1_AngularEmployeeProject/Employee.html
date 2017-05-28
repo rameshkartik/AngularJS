@@ -1,0 +1,59 @@
+﻿
+<script src="Scripts/angular.js"></script>
+<script>
+    
+    function Employee($scope,$rootScope)
+    {
+        
+        $rootScope.Counter = (($rootScope.Counter || 0) + 1);
+        $scope.SalesDateTime = new Date().toDateString();
+        $scope.EmployeeName = "Rameshkartik";
+        $scope.EmployeeCode = "IJK1010";
+        $scope.Submit = function () {
+
+            if($scope.EmployeeName.length == 0)
+            {
+                alert("Need a Proper Data");
+            }
+            else
+            {
+                alert(" Proper Data");
+            }
+
+        }
+    }
+
+    var myApp = angular.module("myApp", []);
+    myApp.controller("EmployeeObj", Employee);
+</script>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+
+<body >
+    <div ng-app="myApp">
+        Counter Variable :- {{Counter}}
+        <div id="EmployeeScreen" ng-controller="EmployeeObj">
+            Date and Time of Sales :- {{SalesDateTime}} <br />
+            Employee Name :- <input id="EmployeeName" type="text" ng-model="EmployeeName" />
+            Employee Code :- <input id="EmployeeCode" type="text" ng-model="EmployeeCode" />
+            <div id="divEmployeeName">{{EmployeeName}}</div>
+            <div id="divEmployeeCode">{{EmployeeCode}}</div>
+        </div> <br /> <br />
+
+        <div id="EmployeeScreen" ng-controller="EmployeeObj">
+            EmployeeName:- <input id="EmployeeName" type="text" ng-model="EmployeeName" />
+            EmployeeCode:- <input id="EmployeeCode" type="text" ng-model="EmployeeCode" />
+            {{EmployeeName}}<br />
+            {{EmployeeCode}}<br />
+            {{SalesDateTime}} <br />
+            <input type="button" name="btn" value="Submit" ng-click="Submit()" />
+        </div> <br /> <br />
+    </div>
+
+</body>
+</html>

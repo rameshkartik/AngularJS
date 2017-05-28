@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+
+<script src="Scripts/Angular/angular.js"></script>
+<script src="Scripts/BusinessComponents/Employee.js"></script>
+<script src="Scripts/Utility/Utility.js"></script>
+<script src="Scripts/Parameters/Values.js"></script>
+<script src="Scripts/Parameters/Constant.js"></script>
+<script src="Scripts/Provider/FactoryEmployee.js"></script>
+<script>
+    function Binder($scope, FactoryEmployee, Utility, Constants, Values) {
+        
+        
+        $scope.Model = FactoryEmployee.Create($scope.Type);
+        $scope.Utility = Utility;
+        $scope.ProjectConstants = Constants;
+        $scope.ProjectValues = Values;
+        $scope.validate = function () {
+            if ($scope.Model.validate()) {
+                alert(Values.SuccessMessage);
+            }
+            else {
+                alert(Values.ErrorMessage);
+            }
+        }
+        $scope.Type = "Simple";
+        debugger;
+        $scope.$watch("Type", function () {
+            $scope.Model = FactoryEmployee.Create($scope.Type);
+        });
+    }
+
+    var myApp = angular.module("myApp", []);
+    var controller = myApp.controller("Binder", Binder);
+</script>
+
+<script src="Scripts/Provider/Provider.js"></script>
+<script>
+
+    myApp.config(function ($provide) {
+        debugger;
+        $provide.decorator("Values", function ($delegate) {
+            $delegate.SuccessMessage = "Everything Ok..";
+            return $delegate;
+        })
+    })
+</script>
+
+<body ng-app="myApp">
+    <div ng-controller="Binder">
+        EmployeeName :- <input type="text" ng-model="Model.EmployeeName" name="nam" value="" /><br />
+        EmployeeCode :- <input type="text" ng-model="Model.Employeecode" name="nam" value="" /><br />
+        EmployeeSalary :- <input type="text" ng-model="Model.EmployeeSalary" name="nam" value="" /><br />
+        Mobile :- <input type="text" ng-model="Model.Mobile" name="nam" value="" /><br />
+        EmployeeType :- <select ng-model="Type">
+    <option value="Simple">Simple</option>
+    <option value="Normal">Normal</option>
+    <option value="Special">Special</option>
+</select>
+        <input type="button" name="btn" value="Click" ng-click="validate()" /> <br />
+        {{Utility.UpperCase(Model.EmployeeName)}} <br />
+        {{Utility.RoundUp(Model.EmployeeSalary,ProjectConstants.Rounding)}}<br />
+    </div>
+</body>
+</html>
+

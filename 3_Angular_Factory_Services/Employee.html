@@ -1,0 +1,73 @@
+﻿
+<script src="Scripts/angular.js"></script>
+<script src="Scripts/Project%20Scripts/Employee.js"></script>
+<script src="Scripts/Project%20Scripts/Utility.js"></script>
+<script>
+    
+    function BindingObj($scope,Factory,UtilityObject)
+    {
+        
+        $scope.Employee = Factory.CreateEmployee(2,UtilityObject);
+        $scope.Utility = UtilityObject;
+        $scope.EmployeeSalaryColor = "Red";
+        $scope.$watch("Employee.EmployeeSalary", function ()
+        {
+            if ($scope.Employee.EmployeeSalary > 3000)
+            {
+                $scope.EmployeeSalaryColor = "Green";
+            }
+            else
+            {
+                $scope.EmployeeSalaryColor = "Red";
+            }
+        });
+
+        $scope.Submit = function ()
+        {
+
+            if ($scope.Utility.isEmpty($scope.Employee.EmployeeSalary))
+            {
+                alert("Need a Proper Data");
+            }
+            else
+            {
+                alert(" Proper Data");
+            }
+
+        }
+    }
+
+    var myApp = angular.module("myApp", []);
+    myApp.controller("BindingObj", BindingObj);
+    myApp.factory("Factory", Factory);
+    myApp.service("UtilityObject", Utility);
+</script>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+
+<body >
+    <div ng-app="myApp">
+        
+        <div id="EmployeeScreen" ng-controller="BindingObj">
+            Welcome to application :- {{::Utility.ApplicationName}} <br />
+            Application Version :- {{::Utility.AppVersion}} <br />
+            Date and Time of Sales :- {{Employee.SalesDateTime}} <br /> <br /> <br />
+            Employee Name :- <input id="EmployeeName" type="text" ng-model="Employee.EmployeeName" /><br />
+            Employee Code :- <input id="EmployeeCode" type="text" ng-model="Employee.EmployeeCode" /><br />
+            Employee Salary :- <input style="background-color:{{EmployeeSalaryColor}}" id="EmployeeSalary" type="text" ng-model="Employee.EmployeeSalary" /><br />
+            <div id="divEmployeeName">{{Employee.EmployeeName}}</div><br />
+            <div id="divEmployeeCode">{{Employee.EmployeeCode}}</div><br />
+            <div id="divEmployeeSal">{{Employee.EmployeeSalary}}</div><br />
+            <input type="button" name="btn" value="Submit" ng-click="Submit()" />
+            <input type="button" name="btn" value="Calcuate Discount" ng-click="Employee.CalculateDiscount()" />
+        </div> <br /> <br />
+
+    </div>
+
+</body>
+</html>

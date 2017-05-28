@@ -1,0 +1,97 @@
+﻿
+<script src="Scripts/angular.js"></script>
+<script>
+    
+    function Employee($scope)
+    {
+        $scope.$on("MyEvent", function (event, data) {
+
+            alert("Employee" + data);
+        });
+
+        $scope.SendDown = function() {
+
+            $scope.$broadcast("MyEvent", "Event from Employee");
+        }
+    }
+
+    function EmployeeDetails($scope) {
+        $scope.$on("MyEvent", function (event, data) {
+
+            alert("EmployeeDetails" + data);
+            //event.stopPropagation();
+            //if (event.defaultPrevented) {
+            //    return true;
+            //}
+        });
+
+        $scope.SendDown = function () {
+
+            $scope.$broadcast("MyEvent", "Event from EmployeeDetails");
+        }
+    }
+
+
+    function Address($scope)
+    {
+        var ref = null;
+
+        $scope.Subscribe = function () {
+            ref = $scope.$on("MyEvent", function (event, data) {
+                alert("Address" + data);
+            });
+        }
+
+        $scope.UnSubscribe = function () {
+            ref();
+        }
+        
+    }
+
+    function Phone($scope,$rootScope)
+    {
+        $scope.$on("MyEvent", function (event, data) {
+
+            alert("Phone" + data);
+        });
+
+        $rootScope.All = function () {
+
+            $rootScope.$broadcast("MyEvent", "Event to All");
+        }
+        $scope.SendUp = function () {
+
+            $scope.$emit("MyEvent", "Event from Phone");
+        }
+    }
+
+    var myApp = angular.module("myApp", []);
+    myApp.controller("Employee", Employee);
+    myApp.controller("EmployeeDetails", EmployeeDetails);
+    myApp.controller("Address", Address);
+    myApp.controller("Phone", Phone);
+</script>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+
+<body ng-app="myApp">
+    <div ng-controller="Employee">
+        <input type="button" value="SendDown" name="btn" ng-click="SendDown()" />
+        <div ng-controller="EmployeeDetails"></div>
+            <div ng-controller="Address">
+                <input type="button" value="Subscribe" name="btn_Subscribe" ng-click="Subscribe()" /><br />
+                <input type="button" value="UnSubscribe" name="btn_UnSubscribe" ng-click="UnSubscribe()" />
+                <div ng-controller="Phone">
+                    <input type="button" value="SendUp" name="btn" ng-click="SendUp()" /><br />
+                    <input type="button" value="SendAll" name="btn_All" ng-click="All()" />
+                </div>
+            </div>
+        </div>
+
+</body>
+</html>
